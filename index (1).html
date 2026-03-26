@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SocialLife | Gestión de Planes y Gastos</title>
+    <meta name="description" content="Gestiona tu vida social, planes y gastos de forma sencilla y moderna.">
+    <!-- Google Fonts: Inter para un look moderno tipo San Francisco/Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconos: Usaremos emojis para mantenerlo ligero y sin dependencias externas, o FontAwesome si fuera necesario, pero optamos por simplicidad nativa -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+    <!-- App Shell -->
+    <div id="app-container">
+        
+        <!-- Header Dinámico -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="user-profile">
+                    <span class="avatar">👤</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenido Principal (Vistas) -->
+        <main id="main-content">
+            
+            <!-- Vista: Dashboard (Default) -->
+            <section id="view-dashboard" class="view active">
+                <div class="summary-cards">
+                    <div class="card summary-card glow-green">
+                        <h3>Presupuesto Total</h3>
+                        <p class="amount" id="dash-total-budget">€0.00</p>
+                    </div>
+                    <div class="card summary-card glow-red">
+                        <h3>Gasto Total</h3>
+                        <p class="amount" id="dash-total-spent">€0.00</p>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2>Próximos Planes</h2>
+                    <button class="btn-text" onclick="app.navigateTo('planes')">Ver todos</button>
+                </div>
+                <div id="next-plans-list" class="horizontal-scroll">
+                    <!-- Dinámico -->
+                </div>
+
+                <div class="section-header">
+                    <h2>Eventos de Hoy</h2>
+                </div>
+                <div id="today-events-list" class="list-container">
+                    <!-- Dinámico -->
+                </div>
+            </section>
+
+            <!-- Vista: Planes -->
+            <section id="view-planes" class="view">
+                <div class="view-header">
+                    <h2>Mis Planes</h2>
+                    <button class="btn-primary" onclick="app.showModal('modal-plan')">+ Nuevo Plan</button>
+                </div>
+                <div class="filters">
+                    <button class="filter-chip active" data-filter="all">Todos</button>
+                    <button class="filter-chip" data-filter="upcoming">Próximos</button>
+                    <button class="filter-chip" data-filter="past">Pasados</button>
+                </div>
+                <div id="plans-list" class="grid-container">
+                    <!-- Dinámico -->
+                </div>
+            </section>
+
+            <!-- Vista: Eventos -->
+            <section id="view-eventos" class="view">
+                <div class="view-header">
+                    <h2>Calendario</h2>
+                    <button class="btn-primary" onclick="app.showModal('modal-evento')">+ Nuevo Evento</button>
+                </div>
+                <div id="events-calendar-list" class="list-container">
+                    <!-- Dinámico: Lista cronológica -->
+                </div>
+            </section>
+
+            <!-- Vista: Detalle de Plan (Dinámica) -->
+            <section id="view-plan-detail" class="view">
+                <button class="btn-back" onclick="app.navigateTo('planes')">← Volver</button>
+                <div id="plan-detail-content">
+                    <!-- Dinámico -->
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Navegación Inferior (Tab Bar) -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="app.navigateTo('dashboard')" id="nav-dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Inicio</span>
+            </button>
+            <button class="nav-item" onclick="app.navigateTo('planes')" id="nav-planes">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">Planes</span>
+            </button>
+            <button class="nav-item" onclick="app.navigateTo('eventos')" id="nav-eventos">
+                <span class="nav-icon">🔔</span>
+                <span class="nav-label">Eventos</span>
+            </button>
+        </nav>
+
+        <!-- Modales -->
+        <!-- Modal Plan -->
+        <div id="modal-plan" class="modal">
+            <div class="modal-content">
+                <h3>Crear Nuevo Plan</h3>
+                <form id="form-plan">
+                    <input type="hidden" id="plan-id">
+                    <div class="form-group">
+                        <label>Nombre del Plan</label>
+                        <input type="text" id="plan-name" placeholder="Ej: Cena Italiana" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" id="plan-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Presupuesto (€)</label>
+                            <input type="number" id="plan-budget" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Lugar</label>
+                        <input type="text" id="plan-location" placeholder="Restaurante, Ciudad...">
+                    </div>
+                    <div class="form-group">
+                        <label>Participantes (separados por coma)</label>
+                        <input type="text" id="plan-participants" placeholder="Ana, Luis, Carlos...">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="app.closeModal('modal-plan')">Cancelar</button>
+                        <button type="submit" class="btn-primary">Guardar Plan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Gasto -->
+        <div id="modal-expense" class="modal">
+            <div class="modal-content">
+                <h3>Añadir Gasto</h3>
+                <form id="form-expense">
+                    <input type="hidden" id="expense-plan-id">
+                    <div class="form-group">
+                        <label>Concepto</label>
+                        <input type="text" id="expense-name" placeholder="Ej: Bebidas" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Importe (€)</label>
+                        <input type="number" id="expense-amount" placeholder="0.00" step="0.01" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="app.closeModal('modal-expense')">Cancelar</button>
+                        <button type="submit" class="btn-primary">Añadir</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Evento -->
+        <div id="modal-evento" class="modal">
+            <div class="modal-content">
+                <h3>Nuevo Evento</h3>
+                <form id="form-evento">
+                    <div class="form-group">
+                        <label>Título del Evento</label>
+                        <input type="text" id="event-title" placeholder="Ej: Comprar regalo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <input type="date" id="event-date" required>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="app.closeModal('modal-evento')">Cancelar</button>
+                        <button type="submit" class="btn-primary">Crear Evento</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container"></div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
